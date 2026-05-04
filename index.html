@@ -502,6 +502,8 @@
         ? 'Sign in to your account to continue'
         : 'Fill in your details to get started';
       document.getElementById('mainBtn').innerText = loginMode ? 'Sign In' : 'Create Account';
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
     };
 
     /* MAIN AUTH */

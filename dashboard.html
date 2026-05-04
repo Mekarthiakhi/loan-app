@@ -1061,11 +1061,11 @@
                 style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
                 <h2 style="font-size:1.2rem;font-weight:700;">Active Loans</h2>
                 <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
-                    <select id="sortSelect" class="form-input" style="max-width:175px;padding:0.5rem 0.75rem;">
+                    <!-- <select id="sortSelect" class="form-input" style="max-width:175px;padding:0.5rem 0.75rem;">
                         <option value="date">📅 Sort by Date</option>
                         <option value="remaining">💰 Sort by Remaining</option>
                         <option value="name">🔤 Sort by Name</option>
-                    </select>
+                    </select> -->
                     <button class="btn-add" id="openAddModal">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -1102,8 +1102,7 @@
         <div class="modal-box">
             <div class="modal-header">
                 <div class="modal-title">➕ Add New Loan</div>
-                <button class="modal-close"
-                    onclick="document.getElementById('addModal').classList.remove('active')">✕</button>
+                <button class="modal-close" onclick="closeAddModal()">✕</button>
             </div>
             <form id="loanForm">
                 <div class="form-group">
@@ -1155,8 +1154,7 @@
                         onchange="document.getElementById('f_assetPhotoLabel').textContent=this.files[0]?this.files[0].name:'Upload image'">
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn-cancel"
-                        onclick="document.getElementById('addModal').classList.remove('active')">Cancel</button>
+                    <button type="button" class="btn-cancel" onclick="closeAddModal()">Cancel</button>
                     <button type="submit" class="btn-save">Add Loan</button>
                 </div>
             </form>
@@ -1426,7 +1424,7 @@
         /* ===== RENDER LOANS ===== */
         function renderLoans() {
             const search = document.getElementById('searchInput').value.toLowerCase();
-            const sort = document.getElementById('sortSelect').value;
+            // const sort = document.getElementById('sortSelect').value;
             const container = document.getElementById('loansList');
 
             let active = loans.filter(l => l.status === 'InProgress');
@@ -1436,9 +1434,9 @@
                 (l.mobile || '').toLowerCase().includes(search)
             );
 
-            if (sort === 'name') active.sort((a, b) => a.name.localeCompare(b.name));
-            else if (sort === 'remaining') active.sort((a, b) => calcRemaining(b) - calcRemaining(a));
-            else active.sort((a, b) => new Date(b.date) - new Date(a.date));
+            // if (sort === 'name') active.sort((a, b) => a.name.localeCompare(b.name));
+            // else if (sort === 'remaining') active.sort((a, b) => calcRemaining(b) - calcRemaining(a));
+            // else active.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             if (active.length === 0) {
                 container.innerHTML = `<div class="empty-state"><p>No active loans found.</p></div>`;
@@ -1591,17 +1589,23 @@
             document.getElementById('loanForm').reset();
             document.getElementById('f_assetPhotoLabel').textContent = 'Upload image';
             document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
+            if (window._capturedPhotos) delete window._capturedPhotos['f_assetPhoto'];
             document.getElementById('addModal').classList.add('active');
         });
 
-        document.querySelectorAll('.btn-cancel').forEach(b => {
-            b.addEventListener('click', () => {
-                document.getElementById('addModal').classList.remove('active');
-            });
-        });
+        window.closeAddModal = () => {
+            document.getElementById('addModal').classList.remove('active');
+            document.getElementById('loanForm').reset();
+            document.getElementById('f_assetPhotoLabel').textContent = 'Upload image';
+            if (window._capturedPhotos) delete window._capturedPhotos['f_assetPhoto'];
+        };
 
         document.getElementById('loanForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!currentUser) {
+                Swal.fire({ icon: 'error', title: 'Not signed in', text: 'Please sign in and try again.' });
+                return;
+            }
             const nameVal = document.getElementById('f_name').value.trim();
             const mobileVal = document.getElementById('f_mobile').value.trim();
             const dateVal = document.getElementById('f_date').value;
@@ -1613,24 +1617,48 @@
 
             let assetPhoto = null;
             if (photoFile) assetPhoto = await toBase64(photoFile);
+            // Use camera-captured photo if no file selected
+            if (!assetPhoto && window._capturedPhotos && window._capturedPhotos['f_assetPhoto']) {
+                assetPhoto = window._capturedPhotos['f_assetPhoto'];
+            }
 
-            await addDoc(collection(db, 'loans'), {
-                userId: currentUser.uid,
-                name: nameVal,
-                mobile: mobileVal,
-                date: dateVal,
-                amount: amountVal,
-                rate: rateVal,
-                status: statusVal,
-                assetName: assetNameVal,
-                assetPhoto: assetPhoto,
-                payments: [],
-                createdAt: new Date().toISOString()
-            });
+            const saveBtn = e.target.querySelector('.btn-save');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
 
-            document.getElementById('addModal').classList.remove('active');
-            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Loan added!', timer: 2000, showConfirmButton: false });
-            loadLoans();
+            try {
+                await addDoc(collection(db, 'loans'), {
+                    userId: currentUser.uid,
+                    name: nameVal,
+                    mobile: mobileVal,
+                    date: dateVal,
+                    amount: amountVal,
+                    rate: rateVal,
+                    status: statusVal,
+                    assetName: assetNameVal,
+                    assetPhoto: assetPhoto,
+                    payments: [],
+                    createdAt: new Date().toISOString()
+                });
+                closeAddModal();
+                Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Loan added!', timer: 2000, showConfirmButton: false });
+                loadLoans();
+            } catch (err) {
+                console.error('Add loan error:', err);
+                if (err.code === 'permission-denied') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Permission Denied',
+                        html: 'Firestore security rules are blocking writes.<br><br>Please update your Firestore rules in the Firebase Console to allow authenticated users to write their own data.',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: err.message || 'Failed to add loan. Please try again.' });
+                }
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Add Loan';
+            }
         });
 
         /* ===== EDIT MODAL ===== */
@@ -1828,12 +1856,16 @@
 
         /* ===== SEARCH & SORT ===== */
         document.getElementById('searchInput').addEventListener('input', renderLoans);
-        document.getElementById('sortSelect').addEventListener('change', renderLoans);
+        // document.getElementById('sortSelect').addEventListener('change', renderLoans);
 
         /* ===== CLOSE ON OVERLAY CLICK ===== */
+        /* Add modal: clicking outside does NOT close it (preserves form data) */
+        /* All other modals: clicking outside closes them */
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
             overlay.addEventListener('click', e => {
-                if (e.target === overlay) overlay.classList.remove('active');
+                if (e.target === overlay && overlay.id !== 'addModal') {
+                    overlay.classList.remove('active');
+                }
             });
         });
     </script>
