@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan App — Auth</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@600;700&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --blue: #1a6fc4;
+      --blue-dark: #1358a0;
+      --blue-light: #e8f0fb;
+      --surface: #ffffff;
+      --text: #0f1923;
+      --muted: #7a8799;
+      --border: #dde3ec;
+      --danger: #e34a4a;
+      --success: #2db87a;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0c1b33;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Background blobs */
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    body::before {
+      width: 500px;
+      height: 500px;
+      background: #1a6fc4;
+      top: -100px;
+      left: -100px;
+    }
+
+    body::after {
+      width: 400px;
+      height: 400px;
+      background: #4a90d9;
+      bottom: -100px;
+      right: -60px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: 20px;
+      width: 400px;
+      padding: 40px 36px 36px;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45);
+      position: relative;
+      animation: slideUp 0.45s cubic-bezier(.22, 1, .36, 1) both;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: var(--blue);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: #fff;
+    }
+
+    .brand-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    .brand-name span {
+      color: var(--blue);
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.55rem;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 26px;
+    }
+
+    /* Tab switcher */
+    .tabs {
+      display: flex;
+      background: var(--blue-light);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 24px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 9px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(26, 111, 196, 0.35);
+    }
+
+    /* Input */
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: 0.2px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      padding: 11px 42px 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text);
+      background: #fafbfd;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-wrap input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 111, 196, 0.12);
+      background: #fff;
+    }
+
+    .input-wrap input::placeholder {
+      color: #b0bac7;
+    }
+
+    /* Eye toggle */
+    .eye-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      transition: color 0.15s;
+    }
+
+    .eye-btn:hover {
+      color: var(--blue);
+    }
+
+    .eye-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Forgot + resend row */
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .link-sm {
+      font-size: 0.78rem;
+      color: var(--blue);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.15s;
+    }
+
+    .link-sm:hover {
+      background: var(--blue-light);
+    }
+
+    /* Main CTA */
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: var(--radius);
+      background: var(--blue);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(26, 111, 196, 0.3);
+      margin-bottom: 14px;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-dark);
+      box-shadow: 0 6px 20px rgba(26, 111, 196, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Google btn */
+    .btn-google {
+      width: 100%;
+      padding: 11px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-google:hover {
+      background: #f7f8fa;
+      border-color: #c5cdd8;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    }
+
+    .btn-google svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    /* Profile box */
+    #profileBox {
+      display: none;
+      text-align: center;
+    }
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      background: var(--blue-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 1.6rem;
+    }
+
+    #profileBox h2 {
+      margin-bottom: 4px;
+    }
+
+    #profileBox p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 20px;
+    }
+
+    .btn-logout {
+      padding: 10px 28px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: #f7f8fa;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <!-- AUTH UI -->
+    <div id="authBox">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+          </svg>
+        </div>
+        <span class="brand-name">Loan<span>App</span></span>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" id="loginTab" onclick="setMode(true)">Login</button>
+        <button class="tab-btn" id="registerTab" onclick="setMode(false)">Register</button>
+      </div>
+
+      <h2 id="title">Welcome back</h2>
+      <p class="subtitle" id="subtitle">Sign in to your account to continue</p>
+
+      <div class="field">
+        <label>Email address</label>
+        <div class="input-wrap">
+          <input type="email" id="email" placeholder="you@example.com">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <input type="password" id="password" placeholder="••••••••" id="password">
+          <button class="eye-btn" onclick="togglePassword()" title="Show/hide password">
+            <!-- eye icon -->
+            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="meta-row">
+        <button class="link-sm" onclick="forgotPassword()">Forgot password?</button>
+        <button class="link-sm" onclick="resendVerification()">↩ Resend verification</button>
+      </div>
+
+      <button class="btn-primary" id="mainBtn" onclick="handleAuth()">Sign In</button>
+
+      <div class="divider">or continue with</div>
+
+      <button class="btn-google" onclick="handleGoogle()">
+        <!-- Google logo SVG -->
+        <svg viewBox="0 0 48 48">
+          <path fill="#EA4335"
+            d="M24 9.5c3.14 0 5.95 1.08 8.17 2.86l6.1-6.1C34.46 3.09 29.5 1 24 1 14.82 1 7.07 6.48 3.69 14.28l7.14 5.55C12.6 13.37 17.86 9.5 24 9.5z" />
+          <path fill="#4285F4"
+            d="M46.52 24.5c0-1.64-.15-3.22-.42-4.75H24v9h12.68c-.55 2.93-2.2 5.41-4.68 7.09l7.14 5.55C43.27 37.6 46.52 31.56 46.52 24.5z" />
+          <path fill="#FBBC05"
+            d="M10.83 28.28A14.55 14.55 0 0 1 9.5 24c0-1.49.26-2.93.71-4.28l-7.14-5.55A23.9 23.9 0 0 0 .5 24c0 3.87.93 7.53 2.57 10.75l7.76-6.47z" />
+          <path fill="#34A853"
+            d="M24 47c5.5 0 10.12-1.82 13.49-4.95l-7.14-5.55C28.54 37.84 26.38 38.5 24 38.5c-6.14 0-11.4-3.87-13.17-9.22l-7.76 6.47C6.85 43.36 14.79 47 24 47z" />
+          <path fill="none" d="M0 0h48v48H0z" />
+        </svg>
+        Continue with Google
+      </button>
+    </div>
+
+    <!-- PROFILE UI -->
+    <div id="profileBox">
+      <div class="avatar">👤</div>
+      <h2>You're in!</h2>
+      <p id="userEmail"></p>
+      <button class="btn-logout" onclick="logout()">Sign out</button>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      sendPasswordResetEmail,
+      sendEmailVerification,
+      onAuthStateChanged,
+      signOut,
+      GoogleAuthProvider,
+      signInWithPopup
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDm_Rocctx-NijDBMDvEqJw3h7mNSX9MCQ",
+      authDomain: "loan-app-207ab.firebaseapp.com",
+      projectId: "loan-app-207ab",
+      storageBucket: "loan-app-207ab.firebasestorage.app",
+      messagingSenderId: "150125385661",
+      appId: "1:150125385661:web:f3f5bc13be5a15f124a4d4",
+      measurementId: "G-FR16F8R70J"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    let isLogin = true;
+
+    /* MODE SWITCH */
+    window.setMode = (loginMode) => {
+      isLogin = loginMode;
+      document.getElementById('loginTab').classList.toggle('active', loginMode);
+      document.getElementById('registerTab').classList.toggle('active', !loginMode);
+      document.getElementById('title').innerText = loginMode ? 'Welcome back' : 'Create account';
+      document.getElementById('subtitle').innerText = loginMode
+        ? 'Sign in to your account to continue'
+        : 'Fill in your details to get started';
+      document.getElementById('mainBtn').innerText = loginMode ? 'Sign In' : 'Create Account';
+    };
+
+    /* MAIN AUTH */
+    window.handleAuth = async () => {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      try {
+        if (isLogin) {
+          const userCred = await signInWithEmailAndPassword(auth, email, password);
+          await userCred.user.reload();
+
+          if (!userCred.user.emailVerified) {
+            toast('warning', 'Please verify your email first');
+            return;
+          }
+
+          toast('success', 'Login successful!');
+          setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+
+        } else {
+          const userCred = await createUserWithEmailAndPassword(auth, email, password);
+          await sendEmailVerification(userCred.user);
+          await signOut(auth); // sign out so they verify first
+          toast('success', 'Account created! Check your email to verify.');
+          setTimeout(() => setMode(true), 2000);
+        }
+      } catch (err) {
+        toast('error', friendlyError(err.code));
+      }
+    };
+
+    /* GOOGLE */
+    window.handleGoogle = async () => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        toast('success', 'Signed in with Google!');
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+      } catch (err) {
+        toast('error', friendlyError(err.code));
+      }
+    };
+
+    /* RESEND */
+    window.resendVerification = async () => {
+      const user = auth.currentUser;
+      if (!user) { toast('warning', 'Login first to resend email'); return; }
+      await sendEmailVerification(user);
+      toast('success', 'Verification email sent!');
+    };
+
+    /* FORGOT */
+    window.forgotPassword = async () => {
+      const email = document.getElementById('email').value.trim();
+      if (!email) { toast('warning', 'Enter your email first'); return; }
+      await sendPasswordResetEmail(auth, email);
+      toast('success', 'Password reset email sent!');
+    };
+
+    /* LOGOUT */
+    window.logout = async () => {
+      await signOut(auth);
+      location.reload();
+    };
+
+    /* PASSWORD TOGGLE */
+    window.togglePassword = () => {
+      const input = document.getElementById('password');
+      const icon = document.getElementById('eyeIcon');
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      icon.innerHTML = isHidden
+        ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`
+        : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+    };
+
+    /* AUTH STATE */
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        await user.reload();
+        if (user.emailVerified || user.providerData[0]?.providerId === 'google.com') {
+          // If not on dashboard, redirect
+          if (!window.location.pathname.includes('dashboard')) {
+            window.location.href = 'dashboard.html';
+          }
+        }
+      }
+    });
+
+    /* FRIENDLY ERRORS */
+    function friendlyError(code) {
+      const map = {
+        'auth/invalid-email': 'Invalid email address',
+        'auth/user-not-found': 'No account found with this email',
+        'auth/wrong-password': 'Incorrect password',
+        'auth/email-already-in-use': 'Email already registered',
+        'auth/weak-password': 'Password must be at least 6 characters',
+        'auth/too-many-requests': 'Too many attempts. Try again later',
+        'auth/popup-closed-by-user': 'Google sign-in was cancelled',
+      };
+      return map[code] || 'Something went wrong. Please try again.';
+    }
+
+    /* TOAST */
+    function toast(type, message) {
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        icon: type,
+        title: message,
+        customClass: { popup: 'swal-toast-custom' }
+      });
+    }
+  </script>
+
+</body>
+
+</html>

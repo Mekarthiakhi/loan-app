@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg-color: #F8FAFC;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border-color: rgba(226, 232, 240, 0.8);
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 0.05) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 0.05) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 0.05) 0, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .glass-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* HEADER */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding: 1.25rem 1.75rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .app-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #8B5CF6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .app-header-left h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-header-left p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.1rem;
+        }
+
+        .btn-logout {
+            background: #FEE2E2;
+            color: var(--danger);
+            padding: 8px 16px;
+            border: 1px solid #FECACA;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-logout:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* STAT CARDS */
+        .dashboard-header {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media(max-width:900px) {
+            .dashboard-header {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media(max-width:600px) {
+            .dashboard-header {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.1rem 1.25rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .stat-card.s-principal::before {
+            background: var(--info);
+        }
+
+        .stat-card.s-interest::before {
+            background: var(--success);
+        }
+
+        .stat-card.s-collected::before {
+            background: var(--warning);
+        }
+
+        .stat-card.s-outstanding::before {
+            background: var(--danger);
+        }
+
+        .stat-card.s-total::before {
+            background: var(--primary);
+        }
+
+        .stat-icon {
+            font-size: 1.3rem;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .stat-value.c-info {
+            color: var(--info);
+        }
+
+        .stat-value.c-success {
+            color: var(--success);
+        }
+
+        .stat-value.c-warning {
+            color: var(--warning);
+        }
+
+        .stat-value.c-danger {
+            color: var(--danger);
+        }
+
+        .stat-value.c-primary {
+            color: var(--primary);
+        }
+
+        /* SEARCH */
+        .search-wrapper {
+            position: relative;
+            margin-bottom: 1.25rem;
+        }
+
+        .search-wrapper svg {
+            position: absolute;
+            left: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 0.7rem 1rem 0.7rem 2.75rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-bar:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            background: #fff;
+        }
+
+        .btn-add {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1.1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 3px 10px rgba(79, 70, 229, 0.25);
+            white-space: nowrap;
+        }
+
+        .btn-add:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* LOAN CARDS */
+        .loans-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .loan-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .loan-card:hover {
+            border-color: rgba(79, 70, 229, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .loan-card-summary {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.2fr auto;
+            gap: 1rem;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        @media(max-width:900px) {
+            .loan-card-summary {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .loan-card-summary>*:last-child {
+                grid-column: 1/-1;
+                justify-self: start;
+            }
+        }
+
+        @media(max-width:600px) {
+            .loan-card-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .loan-card-detail {
+            display: none;
+            margin-top: 1.1rem;
+            padding-top: 1.1rem;
+            border-top: 1px solid var(--border-color);
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loan-card.expanded .loan-card-detail {
+            display: block;
+        }
+
+        .expand-arrow {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-left: 0.3rem;
+            transition: transform 0.25s;
+            display: inline-block;
+        }
+
+        .loan-card.expanded .expand-arrow {
+            transform: rotate(180deg);
+        }
+
+        .loan-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .lc-label {
+            font-size: 0.73rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .lc-value {
+            font-size: 0.98rem;
+            font-weight: 700;
+        }
+
+        .lc-value.blue {
+            color: var(--info);
+        }
+
+        .lc-value.green {
+            color: var(--success);
+        }
+
+        .lc-value.red {
+            color: var(--danger);
+        }
+
+        .lc-value.purple {
+            color: var(--primary);
+        }
+
+        .lc-value.orange {
+            color: var(--warning);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.22rem 0.65rem;
+            border-radius: 999px;
+            font-size: 0.73rem;
+            font-weight: 600;
+        }
+
+        .status-badge.inprogress {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+        }
+
+        .status-badge.completed {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--success);
+        }
+
+        .status-badge.invalid {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* FINANCIAL SUMMARY */
+        .financial-summary {
+            background: linear-gradient(135deg, #f8faff, #f0f4ff);
+            border: 1px solid rgba(79, 70, 229, 0.12);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .fin-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .fin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .fin-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .fin-label {
+            font-size: 0.71rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .fin-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .fin-value.blue {
+            color: var(--info);
+        }
+
+        .fin-value.green {
+            color: var(--success);
+        }
+
+        .fin-value.red {
+            color: var(--danger);
+        }
+
+        .fin-value.orange {
+            color: var(--warning);
+        }
+
+        /* PROGRESS */
+        .progress-block {
+            margin-top: 0.85rem;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+        }
+
+        .progress-meta strong {
+            color: var(--text-main);
+        }
+
+        .progress-bar-track {
+            height: 7px;
+            background: rgba(226, 232, 240, 0.8);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--success), #34d399);
+            transition: width 0.5s ease;
+        }
+
+        .progress-bar-fill.mid {
+            background: linear-gradient(90deg, var(--warning), #fbbf24);
+        }
+
+        .progress-bar-fill.high {
+            background: linear-gradient(90deg, var(--danger), #f87171);
+        }
+
+        /* CARD ACTIONS */
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .edit-btn {
+            background: transparent;
+            border: 1.5px solid var(--warning);
+            color: var(--warning);
+            cursor: pointer;
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.2s;
+        }
+
+        .edit-btn:hover {
+            background: var(--warning);
+            color: white;
+        }
+
+        .del-btn {
+            background: transparent;
+            border: 1.5px solid var(--danger);
+            color: var(--danger);
+            cursor: pointer;
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.2s;
+        }
+
+        .del-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* ASSET */
+        .asset-chip {
+            font-size: 0.73rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.08);
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+            display: inline-block;
+            margin-top: 0.3rem;
+        }
+
+        .asset-thumb {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1.5px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .asset-thumb:hover {
+            transform: scale(1.08);
+        }
+
+        /* HISTORY */
+        .section-gap {
+            margin-top: 1.5rem;
+        }
+
+        .history-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            opacity: 0.88;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        @media(max-width:600px) {
+            .history-card {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .history-card:hover {
+            opacity: 1;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
+        }
+
+        .history-card.completed {
+            border-left-color: var(--success);
+        }
+
+        .history-card.invalid {
+            border-left-color: var(--danger);
+        }
+
+        /* FORMS */
+        .form-group {
+            margin-bottom: 1.15rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 500;
+            margin-bottom: 0.45rem;
+            color: var(--text-main);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.25s;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            background: #fff;
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            width: 92%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            animation: modalIn 0.25s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-close {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: #e2e8f0;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 0.7rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: transparent;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-cancel:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-save {
+            flex: 2;
+            padding: 0.7rem;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-save:hover {
+            background: var(--primary-hover);
+        }
+
+        /* BALANCE BOX IN EDIT MODAL */
+        .modal-balance-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+            background: linear-gradient(135deg, #fff8f0, #fff3e8);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .mbl-row {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .mbl-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .mbl-value {
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        /* PAYMENT SECTION */
+        .pay-section {
+            border-top: 1px solid var(--border-color);
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+        }
+
+        .pay-section-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+        }
+
+        .btn-pay {
+            width: 100%;
+            padding: 0.65rem;
+            border: none;
+            border-radius: 10px;
+            background: var(--success);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.25rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-pay:hover {
+            background: #0da070;
+        }
+
+        .pay-history-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.45rem 0.75rem;
+            border-radius: 8px;
+            background: rgba(16, 185, 129, 0.07);
+            margin-top: 0.45rem;
+            font-size: 0.83rem;
+        }
+
+        .pay-amount {
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .pay-del-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.8rem;
+            opacity: 0.6;
+            padding: 0 0.25rem;
+        }
+
+        .pay-del-btn:hover {
+            opacity: 1;
+        }
+
+        /* ASSET POPUP */
+        .asset-popup-img {
+            width: 100%;
+            max-height: 220px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .asset-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.88rem;
+        }
+
+        .asset-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .asset-detail-row span:first-child {
+            color: var(--text-muted);
+        }
+
+        .asset-detail-row span:last-child {
+            font-weight: 600;
+        }
+
+        /* FILE */
+        .file-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1rem;
+            border: 1.5px dashed var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .file-label:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-camera-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 0.8rem;
+            background: rgba(79, 70, 229, 0.08);
+            color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 0.5rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-camera-trigger:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* CAMERA */
+        .camera-container {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #cameraView {
+            width: 100%;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            display: block;
+        }
+
+        .camera-overlay-info {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 0.75rem;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+        }
+
+        .camera-close-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg {
+            opacity: 0.3;
+            margin-bottom: 0.75rem;
+        }
+
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+
+        @media(max-width:600px) {
+            body {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Header -->
+        <div class="app-header">
+            <div class="app-header-left">
+                <div class="user-avatar" id="userAvatar">L</div>
+                <div>
+                    <h1 id="titleId">Loan App</h1>
+                    <p id="userEmailDisplay">Loading...</p>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="logout()">Sign Out</button>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="dashboard-header">
+            <div class="stat-card s-principal">
+                <div class="stat-icon">💰</div>
+                <span class="stat-label">Total Principal</span>
+                <span class="stat-value c-info" id="totalPrincipal">₹0</span>
+            </div>
+            <div class="stat-card s-interest">
+                <div class="stat-icon">📈</div>
+                <span class="stat-label">Total Interest</span>
+                <span class="stat-value c-success" id="totalInterest">₹0</span>
+            </div>
+            <div class="stat-card s-collected">
+                <div class="stat-icon">✅</div>
+                <span class="stat-label">Total Collected</span>
+                <span class="stat-value c-warning" id="totalCollected">₹0</span>
+            </div>
+            <div class="stat-card s-outstanding">
+                <div class="stat-icon">⏳</div>
+                <span class="stat-label">Outstanding</span>
+                <span class="stat-value c-danger" id="totalOutstanding">₹0</span>
+            </div>
+            <div class="stat-card s-total">
+                <div class="stat-icon">📊</div>
+                <span class="stat-label">Portfolio Value</span>
+                <span class="stat-value c-primary" id="totalValue">₹0</span>
+            </div>
+        </div>
+
+        <!-- Active Loans -->
+        <div class="glass-panel">
+            <div
+                style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+                <h2 style="font-size:1.2rem;font-weight:700;">Active Loans</h2>
+                <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+                    <select id="sortSelect" class="form-input" style="max-width:175px;padding:0.5rem 0.75rem;">
+                        <option value="date">📅 Sort by Date</option>
+                        <option value="remaining">💰 Sort by Remaining</option>
+                        <option value="name">🔤 Sort by Name</option>
+                    </select>
+                    <button class="btn-add" id="openAddModal">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                        Add Loan
+                    </button>
+                </div>
+            </div>
+            <div class="search-wrapper">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search by name or mobile...">
+            </div>
+            <div class="loans-container" id="loansList"></div>
+        </div>
+
+        <!-- History -->
+        <div class="glass-panel section-gap" id="historyPanel" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+                <h2 style="font-size:1.2rem;font-weight:700;">History</h2>
+                <span style="font-size:0.82rem;color:var(--text-muted);">Completed &amp; Invalid loans</span>
+            </div>
+            <div class="loans-container" id="historyList"></div>
+        </div>
+    </div>
+
+    <!-- ===== ADD MODAL ===== -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">➕ Add New Loan</div>
+                <button class="modal-close"
+                    onclick="document.getElementById('addModal').classList.remove('active')">✕</button>
+            </div>
+            <form id="loanForm">
+                <div class="form-group">
+                    <label class="form-label">Borrower Name *</label>
+                    <input type="text" id="f_name" class="form-input" required placeholder="e.g. Ravi Kumar">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mobile Number <span
+                            style="color:var(--text-muted);font-size:0.78rem;">(optional)</span></label>
+                    <input type="tel" id="f_mobile" class="form-input" placeholder="+91 9876543210">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date of Loan *</label>
+                    <input type="date" id="f_date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Loan Amount (₹) *</label>
+                    <input type="number" id="f_amount" class="form-input" required min="1" placeholder="50000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Interest Rate (₹ per ₹100 per month) *</label>
+                    <input type="number" id="f_rate" class="form-input" required step="0.1" min="0" placeholder="2">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select id="f_status" class="form-input">
+                        <option value="InProgress" selected>🔵 InProgress</option>
+                        <option value="Completed">✅ Completed</option>
+                        <option value="Invalid">❌ Invalid</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Asset / Collateral Name <span
+                            style="color:var(--text-muted);font-size:0.78rem;">(optional)</span></label>
+                    <input type="text" id="f_assetName" class="form-input" placeholder="e.g. Gold chain, Land document">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Asset Photo <span
+                            style="color:var(--text-muted);font-size:0.78rem;">(optional)</span></label>
+                    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        <button type="button" class="btn-camera-trigger" onclick="openCamera('f_assetPhoto')">
+                            📷 Capture
+                        </button>
+                        <label class="file-label" for="f_assetPhoto" style="flex:1;min-width:160px;">
+                            🖼 <span id="f_assetPhotoLabel">Upload image</span>
+                        </label>
+                    </div>
+                    <input type="file" id="f_assetPhoto" accept="image/*" style="display:none"
+                        onchange="document.getElementById('f_assetPhotoLabel').textContent=this.files[0]?this.files[0].name:'Upload image'">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel"
+                        onclick="document.getElementById('addModal').classList.remove('active')">Cancel</button>
+                    <button type="submit" class="btn-save">Add Loan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== EDIT MODAL ===== -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">✏️ Edit Loan</div>
+                <button class="modal-close" onclick="closeEditModal()">✕</button>
+            </div>
+
+            <!-- Live Balance Summary -->
+            <div class="modal-balance-box">
+                <div class="mbl-row">
+                    <span class="mbl-label">💵 Principal</span>
+                    <span class="mbl-value" style="color:var(--info)" id="mbPrincipal">—</span>
+                </div>
+                <div class="mbl-row">
+                    <span class="mbl-label">📈 Interest Accrued</span>
+                    <span class="mbl-value" style="color:var(--success)" id="mbInterest">—</span>
+                </div>
+                <div class="mbl-row">
+                    <span class="mbl-label">✅ Total Paid</span>
+                    <span class="mbl-value" style="color:var(--warning)" id="mbPaid">—</span>
+                </div>
+                <div class="mbl-row">
+                    <span class="mbl-label">⏳ Remaining</span>
+                    <span class="mbl-value" style="color:var(--danger)" id="mbRemaining">—</span>
+                </div>
+            </div>
+
+            <form id="editForm">
+                <input type="hidden" id="editLoanId">
+                <div class="form-group">
+                    <label class="form-label">Borrower Name *</label>
+                    <input type="text" id="e_name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mobile Number</label>
+                    <input type="tel" id="e_mobile" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date of Loan *</label>
+                    <input type="date" id="e_date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Loan Amount (₹) *</label>
+                    <input type="number" id="e_amount" class="form-input" required min="1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Interest Rate (₹ per ₹100/month) *</label>
+                    <input type="number" id="e_rate" class="form-input" required step="0.1" min="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select id="e_status" class="form-input">
+                        <option value="InProgress">🔵 InProgress</option>
+                        <option value="Completed">✅ Completed</option>
+                        <option value="Invalid">❌ Invalid</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Asset / Collateral Name</label>
+                    <input type="text" id="e_assetName" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Asset Photo</label>
+                    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        <button type="button" class="btn-camera-trigger" onclick="openCamera('e_assetPhoto')">📷
+                            Capture</button>
+                        <label class="file-label" for="e_assetPhoto" style="flex:1;min-width:160px;">
+                            🖼 <span id="e_assetPhotoLabel">Tap to change image</span>
+                        </label>
+                    </div>
+                    <input type="file" id="e_assetPhoto" accept="image/*" style="display:none"
+                        onchange="document.getElementById('e_assetPhotoLabel').textContent=this.files[0]?this.files[0].name:'Tap to change image'">
+                    <div id="e_assetPhotoPreview" style="margin-top:0.5rem;"></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Changes</button>
+                </div>
+            </form>
+
+            <!-- Payment Section -->
+            <div class="pay-section">
+                <div class="pay-section-title">₹ Record Payment</div>
+                <div class="form-group">
+                    <label class="form-label">Payment Date</label>
+                    <input type="date" id="payDate" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Amount Paid (₹)</label>
+                    <input type="number" id="payAmount" class="form-input" min="1" placeholder="500">
+                </div>
+                <button type="button" class="btn-pay" onclick="recordPayment()">✅ Record Payment</button>
+                <div id="paymentHistoryDisplay" style="margin-top:0.75rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ASSET POPUP -->
+    <div class="modal-overlay" id="assetPopup">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title">🏷 Asset Details</div>
+                <button class="modal-close"
+                    onclick="document.getElementById('assetPopup').classList.remove('active')">✕</button>
+            </div>
+            <img id="assetPopupImg" class="asset-popup-img" src="" alt="Asset" style="display:none;">
+            <div id="assetPopupNoImg" style="text-align:center;padding:1.5rem 0;color:var(--text-muted);display:none;">
+                <p style="font-size:0.85rem;">No photo uploaded</p>
+            </div>
+            <div class="asset-detail-row"><span>Borrower</span><span id="assetPopupBorrower"></span></div>
+            <div class="asset-detail-row"><span>Asset Name</span><span id="assetPopupName"></span></div>
+            <div class="asset-detail-row"><span>Principal</span><span id="assetPopupAmount"></span></div>
+            <div class="asset-detail-row"><span>Date of Loan</span><span id="assetPopupDate"></span></div>
+            <div class="asset-detail-row"><span>Remaining Balance</span><span id="assetPopupRemaining"
+                    style="color:var(--danger);font-weight:700;"></span></div>
+            <div class="modal-actions" style="margin-top:1.25rem;">
+                <button class="btn-cancel"
+                    onclick="document.getElementById('assetPopup').classList.remove('active')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CAMERA MODAL -->
+    <div class="modal-overlay" id="cameraModal">
+        <div class="modal-box" style="padding:1.5rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <div class="modal-title" style="margin-bottom:0;">📷 Capture Photo</div>
+                <button class="camera-close-btn" onclick="closeCamera()">✕</button>
+            </div>
+            <div class="camera-container">
+                <video id="cameraView" autoplay playsinline></video>
+                <div class="camera-overlay-info">Position the asset in center</div>
+            </div>
+            <canvas id="cameraCanvas" style="display:none;"></canvas>
+            <div style="margin-top:1rem;">
+                <button class="btn-save" style="width:100%;padding:0.7rem;" onclick="takePhoto()">📸 Capture
+                    Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+        import {
+            getFirestore, collection, addDoc, getDocs, deleteDoc,
+            doc, updateDoc, query, where
+        } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+        import {
+            getAuth, onAuthStateChanged, signOut
+        } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDm_Rocctx-NijDBMDvEqJw3h7mNSX9MCQ",
+            authDomain: "loan-app-207ab.firebaseapp.com",
+            projectId: "loan-app-207ab",
+            storageBucket: "loan-app-207ab.firebasestorage.app",
+            messagingSenderId: "150125385661",
+            appId: "1:150125385661:web:f3f5bc13be5a15f124a4d4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let currentUser = null;
+        let loans = [];
+        let currentEditId = null;
+        let cameraTargetInput = null;
+        let cameraStream = null;
+
+        /* ===== HELPERS ===== */
+        const fmt = v => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v);
+
+        function monthsBetween(dateStr) {
+            const start = new Date(dateStr);
+            const now = new Date();
+            return Math.max(0, (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()));
+        }
+
+        function calcInterest(amount, rate, dateStr) {
+            const months = monthsBetween(dateStr);
+            return (amount * rate / 100) * months;
+        }
+
+        function calcTotalPaid(payments) {
+            return (payments || []).reduce((s, p) => s + p.amount, 0);
+        }
+
+        function calcRemaining(loan) {
+            const interest = calcInterest(loan.amount, loan.rate, loan.date);
+            const paid = calcTotalPaid(loan.payments);
+            return Math.max(0, loan.amount + interest - paid);
+        }
+
+        function toBase64(file) {
+            return new Promise((res, rej) => {
+                const r = new FileReader();
+                r.onload = () => res(r.result);
+                r.onerror = rej;
+                r.readAsDataURL(file);
+            });
+        }
+
+        /* ===== AUTH ===== */
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                currentUser = user;
+                const name = user.displayName || user.email.split('@')[0];
+                document.getElementById('titleId').textContent = `👋 ${name}`;
+                document.getElementById('userEmailDisplay').textContent = user.email;
+                document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+                loadLoans();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        window.logout = async () => {
+            await signOut(auth);
+            location.href = 'index.html';
+        };
+
+        /* ===== LOAD ===== */
+        const loadLoans = async () => {
+            const q = query(collection(db, 'loans'), where('userId', '==', currentUser.uid));
+            const snap = await getDocs(q);
+            loans = snap.docs.map(d => ({ id: d.id, ...d.data(), payments: d.data().payments || [] }));
+            renderAll();
+        };
+
+        /* ===== RENDER ALL ===== */
+        function renderAll() {
+            renderDashboard();
+            renderLoans();
+            renderHistory();
+        }
+
+        /* ===== DASHBOARD ===== */
+        function renderDashboard() {
+            let totalP = 0, totalI = 0, totalPaid = 0, totalOut = 0;
+            loans.filter(l => l.status === 'InProgress').forEach(l => {
+                const interest = calcInterest(l.amount, l.rate, l.date);
+                const paid = calcTotalPaid(l.payments);
+                const rem = Math.max(0, l.amount + interest - paid);
+                totalP += l.amount;
+                totalI += interest;
+                totalPaid += paid;
+                totalOut += rem;
+            });
+            document.getElementById('totalPrincipal').textContent = fmt(totalP);
+            document.getElementById('totalInterest').textContent = fmt(totalI);
+            document.getElementById('totalCollected').textContent = fmt(totalPaid);
+            document.getElementById('totalOutstanding').textContent = fmt(totalOut);
+            document.getElementById('totalValue').textContent = fmt(totalP + totalI);
+        }
+
+        /* ===== RENDER LOANS ===== */
+        function renderLoans() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const sort = document.getElementById('sortSelect').value;
+            const container = document.getElementById('loansList');
+
+            let active = loans.filter(l => l.status === 'InProgress');
+
+            if (search) active = active.filter(l =>
+                l.name.toLowerCase().includes(search) ||
+                (l.mobile || '').toLowerCase().includes(search)
+            );
+
+            if (sort === 'name') active.sort((a, b) => a.name.localeCompare(b.name));
+            else if (sort === 'remaining') active.sort((a, b) => calcRemaining(b) - calcRemaining(a));
+            else active.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (active.length === 0) {
+                container.innerHTML = `<div class="empty-state"><p>No active loans found.</p></div>`;
+                return;
+            }
+
+            container.innerHTML = active.map(l => loanCardHTML(l)).join('');
+        }
+
+        function loanCardHTML(l) {
+            const interest = calcInterest(l.amount, l.rate, l.date);
+            const paid = calcTotalPaid(l.payments);
+            const total = l.amount + interest;
+            const remaining = Math.max(0, total - paid);
+            const pct = total > 0 ? Math.min(100, (paid / total) * 100) : 0;
+            const barClass = pct >= 75 ? '' : pct >= 40 ? 'mid' : 'high';
+            const months = monthsBetween(l.date);
+            const lastPay = l.payments.length ? l.payments[l.payments.length - 1] : null;
+
+            const assetSection = l.assetName ? `
+        <span class="asset-chip" onclick="event.stopPropagation();showAsset('${l.id}')">
+            📎 ${l.assetName}
+        </span>` : '';
+
+            const photoSection = l.assetPhoto ? `
+        <img src="${l.assetPhoto}" class="asset-thumb" onclick="event.stopPropagation();showAsset('${l.id}')" alt="asset">
+    ` : '';
+
+            return `
+    <div class="loan-card" id="card_${l.id}">
+      <div class="loan-card-summary" onclick="toggleCard('${l.id}')">
+        <div class="loan-col">
+          <span class="lc-label">Borrower</span>
+          <span class="lc-value" style="font-size:1.05rem;">${l.name}</span>
+          ${l.mobile ? `<span style="font-size:0.75rem;color:var(--text-muted);">📞 ${l.mobile}</span>` : ''}
+          <span class="status-badge inprogress">🔵 Active · ${months}mo</span>
+          ${assetSection}
+        </div>
+        <div class="loan-col">
+          <span class="lc-label">Principal</span>
+          <span class="lc-value blue">${fmt(l.amount)}</span>
+          <span style="font-size:0.72rem;color:var(--text-muted);">${l.rate}% /100/mo</span>
+        </div>
+        <div class="loan-col">
+          <span class="lc-label">Interest</span>
+          <span class="lc-value green">${fmt(interest)}</span>
+          <span style="font-size:0.72rem;color:var(--text-muted);">Total: ${fmt(total)}</span>
+        </div>
+        <div class="loan-col">
+          <span class="lc-label">Remaining</span>
+          <span class="lc-value red">${fmt(remaining)}</span>
+          ${lastPay ? `<span style="font-size:0.72rem;color:var(--success);">Last: ${fmt(lastPay.amount)}</span>` : ''}
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;">
+          ${photoSection}
+          <span class="expand-arrow">▼</span>
+        </div>
+      </div>
+
+      <div class="loan-card-detail">
+        <div class="financial-summary">
+          <div class="fin-title">💼 Financial Summary</div>
+          <div class="fin-grid">
+            <div class="fin-item"><span class="fin-label">Principal</span><span class="fin-value blue">${fmt(l.amount)}</span></div>
+            <div class="fin-item"><span class="fin-label">Interest (${months}mo)</span><span class="fin-value green">${fmt(interest)}</span></div>
+            <div class="fin-item"><span class="fin-label">Total Due</span><span class="fin-value orange">${fmt(total)}</span></div>
+            <div class="fin-item"><span class="fin-label">Total Paid</span><span class="fin-value green">${fmt(paid)}</span></div>
+            <div class="fin-item"><span class="fin-label">Remaining</span><span class="fin-value red">${fmt(remaining)}</span></div>
+            <div class="fin-item"><span class="fin-label">Loan Date</span><span class="fin-value" style="font-size:0.82rem;font-weight:600;">${l.date}</span></div>
+          </div>
+          <div class="progress-block">
+            <div class="progress-meta">
+              <span>Repayment Progress</span>
+              <strong>${pct.toFixed(1)}%</strong>
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill ${barClass}" style="width:${pct}%"></div>
+            </div>
+          </div>
+        </div>
+
+        ${l.payments.length > 0 ? `
+        <div style="margin-bottom:0.75rem;">
+          <div style="font-size:0.78rem;font-weight:600;color:var(--text-muted);margin-bottom:0.4rem;">PAYMENT HISTORY</div>
+          ${l.payments.map((p, pi) => `
+            <div class="pay-history-row">
+              <span>${p.date}</span>
+              <span class="pay-amount">${fmt(p.amount)}</span>
+            </div>
+          `).join('')}
+        </div>` : ''}
+
+        <div class="card-actions">
+          <button class="edit-btn" onclick="event.stopPropagation();openEditModal('${l.id}')">
+            ✏️ Edit / Pay
+          </button>
+          <button class="del-btn" onclick="event.stopPropagation();confirmDelete('${l.id}')">
+            🗑 Delete
+          </button>
+        </div>
+      </div>
+    </div>`;
+        }
+
+        window.toggleCard = (id) => {
+            document.getElementById('card_' + id)?.classList.toggle('expanded');
+        };
+
+        /* ===== HISTORY ===== */
+        function renderHistory() {
+            const hist = loans.filter(l => l.status !== 'InProgress');
+            const panel = document.getElementById('historyPanel');
+            if (hist.length === 0) { panel.style.display = 'none'; return; }
+            panel.style.display = 'block';
+
+            document.getElementById('historyList').innerHTML = hist.map(l => {
+                const interest = calcInterest(l.amount, l.rate, l.date);
+                const paid = calcTotalPaid(l.payments);
+                const statusClass = l.status === 'Completed' ? 'completed' : 'invalid';
+                const statusEmoji = l.status === 'Completed' ? '✅' : '❌';
+                return `
+        <div class="history-card ${statusClass}">
+          <div class="loan-col">
+            <span class="lc-value">${l.name}</span>
+            ${l.mobile ? `<span style="font-size:0.73rem;color:var(--text-muted);">📞 ${l.mobile}</span>` : ''}
+            <span class="status-badge ${statusClass}">${statusEmoji} ${l.status}</span>
+          </div>
+          <div class="loan-col">
+            <span class="lc-label">Principal</span>
+            <span class="lc-value blue">${fmt(l.amount)}</span>
+          </div>
+          <div class="loan-col">
+            <span class="lc-label">Interest Earned</span>
+            <span class="lc-value green">${fmt(interest)}</span>
+          </div>
+          <div class="loan-col">
+            <span class="lc-label">Total Paid</span>
+            <span class="lc-value orange">${fmt(paid)}</span>
+          </div>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="edit-btn" onclick="openEditModal('${l.id}')">✏️</button>
+            <button class="del-btn" onclick="confirmDelete('${l.id}')">🗑</button>
+          </div>
+        </div>`;
+            }).join('');
+        }
+
+        /* ===== ADD MODAL ===== */
+        document.getElementById('openAddModal').addEventListener('click', () => {
+            document.getElementById('loanForm').reset();
+            document.getElementById('f_assetPhotoLabel').textContent = 'Upload image';
+            document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('addModal').classList.add('active');
+        });
+
+        document.querySelectorAll('.btn-cancel').forEach(b => {
+            b.addEventListener('click', () => {
+                document.getElementById('addModal').classList.remove('active');
+            });
+        });
+
+        document.getElementById('loanForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nameVal = document.getElementById('f_name').value.trim();
+            const mobileVal = document.getElementById('f_mobile').value.trim();
+            const dateVal = document.getElementById('f_date').value;
+            const amountVal = parseFloat(document.getElementById('f_amount').value);
+            const rateVal = parseFloat(document.getElementById('f_rate').value);
+            const statusVal = document.getElementById('f_status').value;
+            const assetNameVal = document.getElementById('f_assetName').value.trim();
+            const photoFile = document.getElementById('f_assetPhoto').files[0];
+
+            let assetPhoto = null;
+            if (photoFile) assetPhoto = await toBase64(photoFile);
+
+            await addDoc(collection(db, 'loans'), {
+                userId: currentUser.uid,
+                name: nameVal,
+                mobile: mobileVal,
+                date: dateVal,
+                amount: amountVal,
+                rate: rateVal,
+                status: statusVal,
+                assetName: assetNameVal,
+                assetPhoto: assetPhoto,
+                payments: [],
+                createdAt: new Date().toISOString()
+            });
+
+            document.getElementById('addModal').classList.remove('active');
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Loan added!', timer: 2000, showConfirmButton: false });
+            loadLoans();
+        });
+
+        /* ===== EDIT MODAL ===== */
+        window.openEditModal = (id) => {
+            const l = loans.find(x => x.id === id);
+            if (!l) return;
+            currentEditId = id;
+
+            // Fill balance summary
+            const interest = calcInterest(l.amount, l.rate, l.date);
+            const paid = calcTotalPaid(l.payments);
+            const remaining = Math.max(0, l.amount + interest - paid);
+            document.getElementById('mbPrincipal').textContent = fmt(l.amount);
+            document.getElementById('mbInterest').textContent = fmt(interest);
+            document.getElementById('mbPaid').textContent = fmt(paid);
+            document.getElementById('mbRemaining').textContent = fmt(remaining);
+
+            // Fill form
+            document.getElementById('editLoanId').value = id;
+            document.getElementById('e_name').value = l.name;
+            document.getElementById('e_mobile').value = l.mobile || '';
+            document.getElementById('e_date').value = l.date;
+            document.getElementById('e_amount').value = l.amount;
+            document.getElementById('e_rate').value = l.rate;
+            document.getElementById('e_status').value = l.status || 'InProgress';
+            document.getElementById('e_assetName').value = l.assetName || '';
+            document.getElementById('e_assetPhotoLabel').textContent = l.assetPhoto ? 'Photo on file' : 'Tap to change image';
+
+            // Preview existing photo
+            const preview = document.getElementById('e_assetPhotoPreview');
+            preview.innerHTML = l.assetPhoto
+                ? `<img src="${l.assetPhoto}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border-color);">`
+                : '';
+
+            // Payment history
+            document.getElementById('payDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('payAmount').value = '';
+            renderPayHistory(l);
+
+            document.getElementById('editModal').classList.add('active');
+        };
+
+        window.closeEditModal = () => {
+            document.getElementById('editModal').classList.remove('active');
+            currentEditId = null;
+        };
+
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentEditId) return;
+
+            const photoFile = document.getElementById('e_assetPhoto').files[0];
+            const currentLoan = loans.find(x => x.id === currentEditId);
+            let assetPhoto = currentLoan?.assetPhoto || null;
+            if (photoFile) assetPhoto = await toBase64(photoFile);
+
+            await updateDoc(doc(db, 'loans', currentEditId), {
+                name: document.getElementById('e_name').value.trim(),
+                mobile: document.getElementById('e_mobile').value.trim(),
+                date: document.getElementById('e_date').value,
+                amount: parseFloat(document.getElementById('e_amount').value),
+                rate: parseFloat(document.getElementById('e_rate').value),
+                status: document.getElementById('e_status').value,
+                assetName: document.getElementById('e_assetName').value.trim(),
+                assetPhoto: assetPhoto
+            });
+
+            closeEditModal();
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Loan updated!', timer: 2000, showConfirmButton: false });
+            loadLoans();
+        });
+
+        /* ===== PAYMENTS ===== */
+        window.recordPayment = async () => {
+            if (!currentEditId) return;
+            const amount = parseFloat(document.getElementById('payAmount').value);
+            const date = document.getElementById('payDate').value;
+            if (!amount || !date) { Swal.fire({ toast: true, icon: 'warning', title: 'Enter date and amount', timer: 2000, showConfirmButton: false, position: 'top-end' }); return; }
+
+            const loan = loans.find(x => x.id === currentEditId);
+            const payments = [...(loan.payments || []), { date, amount }];
+
+            await updateDoc(doc(db, 'loans', currentEditId), { payments });
+
+            document.getElementById('payAmount').value = '';
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Payment recorded!', timer: 2000, showConfirmButton: false });
+
+            // Refresh balance in modal
+            const newLoan = { ...loan, payments };
+            loans = loans.map(l => l.id === currentEditId ? newLoan : l);
+            const interest = calcInterest(newLoan.amount, newLoan.rate, newLoan.date);
+            const paid = calcTotalPaid(payments);
+            const remaining = Math.max(0, newLoan.amount + interest - paid);
+            document.getElementById('mbPaid').textContent = fmt(paid);
+            document.getElementById('mbRemaining').textContent = fmt(remaining);
+            renderPayHistory(newLoan);
+            renderAll();
+        };
+
+        function renderPayHistory(l) {
+            const container = document.getElementById('paymentHistoryDisplay');
+            if (!l.payments.length) { container.innerHTML = ''; return; }
+            container.innerHTML = `<div style="font-size:0.75rem;color:var(--text-muted);font-weight:600;margin-bottom:0.3rem;">PAYMENT HISTORY</div>` +
+                l.payments.map((p, i) => `
+        <div class="pay-history-row">
+            <span>${p.date}</span>
+            <span class="pay-amount">${fmt(p.amount)}</span>
+            <button class="pay-del-btn" onclick="deletePayment(${i})">✕</button>
+        </div>`).join('');
+        }
+
+        window.deletePayment = async (index) => {
+            if (!currentEditId) return;
+            const loan = loans.find(x => x.id === currentEditId);
+            const payments = loan.payments.filter((_, i) => i !== index);
+            await updateDoc(doc(db, 'loans', currentEditId), { payments });
+            loans = loans.map(l => l.id === currentEditId ? { ...l, payments } : l);
+            const updatedLoan = { ...loan, payments };
+            const interest = calcInterest(updatedLoan.amount, updatedLoan.rate, updatedLoan.date);
+            const paid = calcTotalPaid(payments);
+            document.getElementById('mbPaid').textContent = fmt(paid);
+            document.getElementById('mbRemaining').textContent = fmt(Math.max(0, updatedLoan.amount + interest - paid));
+            renderPayHistory(updatedLoan);
+            renderAll();
+        };
+
+        /* ===== DELETE ===== */
+        window.confirmDelete = async (id) => {
+            const res = await Swal.fire({
+                title: 'Delete this loan?',
+                text: 'This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#EF4444',
+                confirmButtonText: 'Yes, delete',
+                cancelButtonText: 'Cancel'
+            });
+            if (res.isConfirmed) {
+                await deleteDoc(doc(db, 'loans', id));
+                Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Deleted!', timer: 2000, showConfirmButton: false });
+                loadLoans();
+            }
+        };
+
+        /* ===== ASSET POPUP ===== */
+        window.showAsset = (id) => {
+            const l = loans.find(x => x.id === id);
+            if (!l) return;
+            const img = document.getElementById('assetPopupImg');
+            const noImg = document.getElementById('assetPopupNoImg');
+            if (l.assetPhoto) { img.src = l.assetPhoto; img.style.display = 'block'; noImg.style.display = 'none'; }
+            else { img.style.display = 'none'; noImg.style.display = 'block'; }
+            document.getElementById('assetPopupBorrower').textContent = l.name;
+            document.getElementById('assetPopupName').textContent = l.assetName || '—';
+            document.getElementById('assetPopupAmount').textContent = fmt(l.amount);
+            document.getElementById('assetPopupDate').textContent = l.date;
+            document.getElementById('assetPopupRemaining').textContent = fmt(calcRemaining(l));
+            document.getElementById('assetPopup').classList.add('active');
+        };
+
+        /* ===== CAMERA ===== */
+        window.openCamera = async (inputId) => {
+            cameraTargetInput = inputId;
+            document.getElementById('cameraModal').classList.add('active');
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                document.getElementById('cameraView').srcObject = cameraStream;
+            } catch { Swal.fire({ toast: true, icon: 'error', title: 'Camera not accessible', timer: 2500, showConfirmButton: false, position: 'top-end' }); closeCamera(); }
+        };
+
+        window.closeCamera = () => {
+            if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
+            document.getElementById('cameraModal').classList.remove('active');
+        };
+
+        window.takePhoto = () => {
+            const video = document.getElementById('cameraView');
+            const canvas = document.getElementById('cameraCanvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+
+            // Set as file input preview via data URL stored separately
+            const labelId = cameraTargetInput === 'f_assetPhoto' ? 'f_assetPhotoLabel' : 'e_assetPhotoLabel';
+            document.getElementById(labelId).textContent = '📷 Photo captured';
+
+            // Store in a global temp object
+            window._capturedPhotos = window._capturedPhotos || {};
+            window._capturedPhotos[cameraTargetInput] = dataUrl;
+
+            closeCamera();
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Photo captured!', timer: 1500, showConfirmButton: false });
+        };
+
+        /* ===== SEARCH & SORT ===== */
+        document.getElementById('searchInput').addEventListener('input', renderLoans);
+        document.getElementById('sortSelect').addEventListener('change', renderLoans);
+
+        /* ===== CLOSE ON OVERLAY CLICK ===== */
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', e => {
+                if (e.target === overlay) overlay.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+
+</html>
