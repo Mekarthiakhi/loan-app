@@ -1484,15 +1484,14 @@
           <span class="lc-value blue">${fmt(l.amount)}</span>
           <span style="font-size:0.72rem;color:var(--text-muted);">${l.rate}% /100/mo</span>
         </div>
-        <div class="loan-col">
-          <span class="lc-label">Interest</span>
-          <span class="lc-value green">${fmt(interest)}</span>
-          <span style="font-size:0.72rem;color:var(--text-muted);">Total: ${fmt(total)}</span>
-        </div>
+       <div class="loan-col">
+  <span class="lc-label">Interest Due</span>
+  <span class="lc-value orange">${fmt(Math.max(0, interest - Math.min(paid, interest)))}</span>
+  <span style="font-size:0.72rem;color:var(--text-muted);">Total Interest: ${fmt(interest)}</span>
+</div>
         <div class="loan-col">
   <span class="lc-label">Remaining</span>
   <span class="lc-value red">${fmt(remaining)}</span>
-  <span style="font-size:0.72rem;color:var(--warning);">Interest due: ${fmt(Math.max(0, interest - Math.min(paid, interest)))}</span>
   ${lastPay ? `<span style="font-size:0.72rem;color:var(--success);">Last: ${fmt(lastPay.amount)}</span>` : ''}
 </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;">
@@ -1505,12 +1504,12 @@
         <div class="financial-summary">
           <div class="fin-title">💼 Financial Summary</div>
           <div class="fin-grid">
-            <div class="fin-item"><span class="fin-label">Principal</span><span class="fin-value blue">${fmt(l.amount)}</span></div>
-            <div class="fin-item"><span class="fin-label">Interest (${months}mo)</span><span class="fin-value green">${fmt(interest)}</span></div>
-            <div class="fin-item"><span class="fin-label">Total Due</span><span class="fin-value orange">${fmt(total)}</span></div>
-            <div class="fin-item"><span class="fin-label">Total Paid</span><span class="fin-value green">${fmt(paid)}</span></div>
+          <div class="fin-item"><span class="fin-label">Total Interest (${months}mo)</span><span class="fin-value green">${fmt(interest)}</span></div>
 <div class="fin-item"><span class="fin-label">Interest Due</span><span class="fin-value orange">${fmt(Math.max(0, interest - Math.min(paid, interest)))}</span></div>
-            <div class="fin-item"><span class="fin-label">Loan Date</span><span class="fin-value" style="font-size:0.82rem;font-weight:600;">${l.date}</span></div>
+<div class="fin-item"><span class="fin-label">Total Due</span><span class="fin-value red">${fmt(total)}</span></div>
+<div class="fin-item"><span class="fin-label">Total Paid</span><span class="fin-value green">${fmt(paid)}</span></div>
+<div class="fin-item"><span class="fin-label">Remaining</span><span class="fin-value red">${fmt(remaining)}</span></div>
+<div class="fin-item"><span class="fin-label">Loan Date</span><span class="fin-value" style="font-size:0.82rem;font-weight:600;">${l.date}</span></div>
           </div>
           <div class="progress-block">
             <div class="progress-meta">
