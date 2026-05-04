@@ -1187,6 +1187,10 @@
                     <span class="mbl-label">⏳ Remaining</span>
                     <span class="mbl-value" style="color:var(--danger)" id="mbRemaining">—</span>
                 </div>
+                <div class="mbl-row">
+                    <span class="mbl-label">🔶 Interest Due</span>
+                    <span class="mbl-value" style="color:var(--warning)" id="mbInterestDue">—</span>
+                </div>
             </div>
 
             <form id="editForm">
@@ -1486,10 +1490,11 @@
           <span style="font-size:0.72rem;color:var(--text-muted);">Total: ${fmt(total)}</span>
         </div>
         <div class="loan-col">
-          <span class="lc-label">Remaining</span>
-          <span class="lc-value red">${fmt(remaining)}</span>
-          ${lastPay ? `<span style="font-size:0.72rem;color:var(--success);">Last: ${fmt(lastPay.amount)}</span>` : ''}
-        </div>
+  <span class="lc-label">Remaining</span>
+  <span class="lc-value red">${fmt(remaining)}</span>
+  <span style="font-size:0.72rem;color:var(--warning);">Interest due: ${fmt(Math.max(0, interest - Math.min(paid, interest)))}</span>
+  ${lastPay ? `<span style="font-size:0.72rem;color:var(--success);">Last: ${fmt(lastPay.amount)}</span>` : ''}
+</div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;">
           ${photoSection}
           <span class="expand-arrow">▼</span>
@@ -1504,7 +1509,7 @@
             <div class="fin-item"><span class="fin-label">Interest (${months}mo)</span><span class="fin-value green">${fmt(interest)}</span></div>
             <div class="fin-item"><span class="fin-label">Total Due</span><span class="fin-value orange">${fmt(total)}</span></div>
             <div class="fin-item"><span class="fin-label">Total Paid</span><span class="fin-value green">${fmt(paid)}</span></div>
-            <div class="fin-item"><span class="fin-label">Remaining</span><span class="fin-value red">${fmt(remaining)}</span></div>
+<div class="fin-item"><span class="fin-label">Interest Due</span><span class="fin-value orange">${fmt(Math.max(0, interest - Math.min(paid, interest)))}</span></div>
             <div class="fin-item"><span class="fin-label">Loan Date</span><span class="fin-value" style="font-size:0.82rem;font-weight:600;">${l.date}</span></div>
           </div>
           <div class="progress-block">
@@ -1674,7 +1679,13 @@
             document.getElementById('mbPrincipal').textContent = fmt(l.amount);
             document.getElementById('mbInterest').textContent = fmt(interest);
             document.getElementById('mbPaid').textContent = fmt(paid);
-            document.getElementById('mbRemaining').textContent = fmt(remaining);
+
+            // document.getElementById('mbRemaining').textContent = fmt(remaining);
+
+
+
+            document.getElementById('mbInterestDue').textContent = fmt(Math.max(0, interest - Math.min(paid, interest)));
+
 
             // Fill form
             document.getElementById('editLoanId').value = id;
@@ -1754,6 +1765,8 @@
             const remaining = Math.max(0, newLoan.amount + interest - paid);
             document.getElementById('mbPaid').textContent = fmt(paid);
             document.getElementById('mbRemaining').textContent = fmt(remaining);
+            document.getElementById('mbInterestDue').textContent = fmt(Math.max(0, interest - Math.min(paid, interest)));
+
             renderPayHistory(newLoan);
             renderAll();
         };
@@ -1781,6 +1794,8 @@
             const paid = calcTotalPaid(payments);
             document.getElementById('mbPaid').textContent = fmt(paid);
             document.getElementById('mbRemaining').textContent = fmt(Math.max(0, updatedLoan.amount + interest - paid));
+            document.getElementById('mbInterestDue').textContent = fmt(Math.max(0, interest - Math.min(paid, interest)));
+
             renderPayHistory(updatedLoan);
             renderAll();
         };
