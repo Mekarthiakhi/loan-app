@@ -473,8 +473,8 @@
       onAuthStateChanged,
       signOut,
       GoogleAuthProvider,
-      signInWithRedirect,
-      getRedirectResult
+      signInWithPopup,
+      // getRedirectResult
     } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
     const firebaseConfig = {
@@ -537,27 +537,30 @@
       }
     };
 
-    /* GOOGLE — uses redirect (works on all deployed domains) */
+    // ADD:
     window.handleGoogle = async () => {
       try {
-        await signInWithRedirect(auth, provider);
-        // Page will reload after redirect; result handled in getRedirectResult below
+        const result = await signInWithPopup(auth, provider);
+        if (result.user) {
+          toast('success', 'Signed in with Google!');
+          setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+        }
       } catch (err) {
         toast('error', friendlyError(err.code));
       }
     };
 
     /* Handle result when page loads after Google redirect */
-    getRedirectResult(auth).then((result) => {
-      if (result && result.user) {
-        toast('success', 'Signed in with Google!');
-        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
-      }
-    }).catch((err) => {
-      if (err.code && err.code !== 'auth/no-current-user') {
-        toast('error', friendlyError(err.code));
-      }
-    });
+    // getRedirectResult(auth).then((result) => {
+    //   if (result && result.user) {
+    //     toast('success', 'Signed in with Google!');
+    //     setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+    //   }
+    // }).catch((err) => {
+    //   if (err.code && err.code !== 'auth/no-current-user') {
+    //     toast('error', friendlyError(err.code));
+    //   }
+    // });
 
     /* RESEND */
     window.resendVerification = async () => {
