@@ -1107,12 +1107,12 @@
             <form id="loanForm">
                 <div class="form-group">
                     <label class="form-label">Borrower Name *</label>
-                    <input type="text" id="f_name" class="form-input" required placeholder="e.g. Ravi Kumar">
+                    <input type="text" id="f_name" class="form-input" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Mobile Number <span
                             style="color:var(--text-muted);font-size:0.78rem;">(optional)</span></label>
-                    <input type="tel" id="f_mobile" class="form-input" placeholder="+91 9876543210">
+                    <input type="tel" id="f_mobile" class="form-input">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Date of Loan *</label>
@@ -1120,11 +1120,11 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Loan Amount (₹) *</label>
-                    <input type="number" id="f_amount" class="form-input" required min="1" placeholder="50000">
+                    <input type="number" id="f_amount" class="form-input" required min="1">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Interest Rate (₹ per ₹100 per month) *</label>
-                    <input type="number" id="f_rate" class="form-input" required step="0.1" min="0" placeholder="2">
+                    <input type="number" id="f_rate" class="form-input" required step="0.1" min="0">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Status</label>
@@ -1137,7 +1137,7 @@
                 <div class="form-group">
                     <label class="form-label">Asset / Collateral Name <span
                             style="color:var(--text-muted);font-size:0.78rem;">(optional)</span></label>
-                    <input type="text" id="f_assetName" class="form-input" placeholder="e.g. Gold chain, Land document">
+                    <input type="text" id="f_assetName" class="form-input">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Asset Photo <span
@@ -1251,7 +1251,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Amount Paid (₹)</label>
-                    <input type="number" id="payAmount" class="form-input" min="1" placeholder="500">
+                    <input type="number" id="payAmount" class="form-input" min="1">
                 </div>
                 <button type="button" class="btn-pay" onclick="recordPayment()">✅ Record Payment</button>
                 <div id="paymentHistoryDisplay" style="margin-top:0.75rem;"></div>
