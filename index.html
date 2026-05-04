@@ -473,7 +473,8 @@
       onAuthStateChanged,
       signOut,
       GoogleAuthProvider,
-      signInWithPopup
+      signInWithRedirect,
+      getRedirectResult
     } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
     const firebaseConfig = {
@@ -536,16 +537,27 @@
       }
     };
 
-    /* GOOGLE */
+    /* GOOGLE — uses redirect (works on all deployed domains) */
     window.handleGoogle = async () => {
       try {
-        const result = await signInWithPopup(auth, provider);
-        toast('success', 'Signed in with Google!');
-        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+        await signInWithRedirect(auth, provider);
+        // Page will reload after redirect; result handled in getRedirectResult below
       } catch (err) {
         toast('error', friendlyError(err.code));
       }
     };
+
+    /* Handle result when page loads after Google redirect */
+    getRedirectResult(auth).then((result) => {
+      if (result && result.user) {
+        toast('success', 'Signed in with Google!');
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+      }
+    }).catch((err) => {
+      if (err.code && err.code !== 'auth/no-current-user') {
+        toast('error', friendlyError(err.code));
+      }
+    });
 
     /* RESEND */
     window.resendVerification = async () => {
@@ -603,6 +615,9 @@
         'auth/weak-password': 'Password must be at least 6 characters',
         'auth/too-many-requests': 'Too many attempts. Try again later',
         'auth/popup-closed-by-user': 'Google sign-in was cancelled',
+        'auth/popup-blocked': 'Popup was blocked by your browser',
+        'auth/unauthorized-domain': 'This domain is not authorized in Firebase. Add it to Firebase Console → Authentication → Authorized Domains.',
+        'auth/cancelled-popup-request': 'Google sign-in was cancelled',
       };
       return map[code] || 'Something went wrong. Please try again.';
     }
