@@ -414,7 +414,7 @@
       <div class="field">
         <label>Password</label>
         <div class="input-wrap">
-          <input type="password" id="password" placeholder="••••••••" id="password">
+          <input type="password" id="password" placeholder="••••••••">
           <button class="eye-btn" onclick="togglePassword()" title="Show/hide password">
             <!-- eye icon -->
             <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -574,8 +574,12 @@
     window.forgotPassword = async () => {
       const email = document.getElementById('email').value.trim();
       if (!email) { toast('warning', 'Enter your email first'); return; }
-      await sendPasswordResetEmail(auth, email);
-      toast('success', 'Password reset email sent!');
+      try {
+        await sendPasswordResetEmail(auth, email);
+        toast('success', 'Password reset email sent!');
+      } catch (err) {
+        toast('error', friendlyError(err.code));
+      }
     };
 
     /* LOGOUT */

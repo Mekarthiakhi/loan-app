@@ -23,6 +23,43 @@
             --info: #3B82F6;
         }
 
+        [data-theme="dark"] {
+            --primary: #6366F1;
+            --primary-hover: #818CF8;
+            --bg-color: #0F172A;
+            --card-bg: rgba(30, 41, 59, 0.85);
+            --text-main: #F1F5F9;
+            --text-muted: #94A3B8;
+            --border-color: rgba(51, 65, 85, 0.8);
+            --success: #34D399;
+            --danger: #F87171;
+            --warning: #FBBF24;
+            --info: #60A5FA;
+        }
+
+        [data-theme="dark"] .stat-card,
+        [data-theme="dark"] .loan-card,
+        [data-theme="dark"] .history-card,
+        [data-theme="dark"] .modal-box { background: #1E293B; }
+        [data-theme="dark"] .app-header { background: rgba(30, 41, 59, 0.9); }
+        [data-theme="dark"] .form-input,
+        [data-theme="dark"] .search-bar { background: rgba(15, 23, 42, 0.6); color: var(--text-main); border-color: var(--border-color); }
+        [data-theme="dark"] .form-input:focus,
+        [data-theme="dark"] .search-bar:focus { background: #1E293B; }
+        [data-theme="dark"] .modal-close { background: #334155; color: var(--text-muted); }
+        [data-theme="dark"] .btn-cancel { color: var(--text-muted); border-color: var(--border-color); }
+        [data-theme="dark"] .btn-cancel:hover { background: #334155; }
+        [data-theme="dark"] .financial-summary { background: linear-gradient(135deg, #1a2332, #1e293b); border-color: rgba(99, 102, 241, 0.15); }
+        [data-theme="dark"] .modal-balance-box { background: linear-gradient(135deg, #1a2332, #1e293b); border-color: rgba(251, 191, 36, 0.15); }
+        [data-theme="dark"] .pay-history-row { background: rgba(52, 211, 153, 0.08); }
+        [data-theme="dark"] .btn-logout { background: rgba(248, 113, 113, 0.15); border-color: rgba(248, 113, 113, 0.3); }
+        [data-theme="dark"] body {
+            background-image:
+                radial-gradient(at 0% 0%, hsla(253, 50%, 30%, 0.15) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 50%, 30%, 0.1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(339, 50%, 30%, 0.1) 0, transparent 50%);
+        }
+
         *,
         *::before,
         *::after {
@@ -582,19 +619,7 @@
             margin-top: 0.3rem;
         }
 
-        .asset-thumb {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 1.5px solid var(--border-color);
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
 
-        .asset-thumb:hover {
-            transform: scale(1.08);
-        }
 
         /* HISTORY */
         .section-gap {
@@ -876,13 +901,6 @@
         }
 
         /* ASSET POPUP */
-        .asset-popup-img {
-            width: 100%;
-            max-height: 220px;
-            object-fit: contain;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-        }
 
         .asset-detail-row {
             display: flex;
@@ -904,89 +922,7 @@
             font-weight: 600;
         }
 
-        /* FILE */
-        .file-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.55rem 1rem;
-            border: 1.5px dashed var(--border-color);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            width: 100%;
-            transition: all 0.2s;
-        }
 
-        .file-label:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-camera-trigger {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.45rem 0.8rem;
-            background: rgba(79, 70, 229, 0.08);
-            color: var(--primary);
-            border: none;
-            border-radius: 8px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 0.5rem;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .btn-camera-trigger:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* CAMERA */
-        .camera-container {
-            position: relative;
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-        }
-
-        #cameraView {
-            width: 100%;
-            aspect-ratio: 4/3;
-            object-fit: cover;
-            display: block;
-        }
-
-        .camera-overlay-info {
-            position: absolute;
-            bottom: 10px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: white;
-            font-size: 0.75rem;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-            pointer-events: none;
-        }
-
-        .camera-close-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            border: none;
-            color: white;
-            font-size: 1.1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
 
         .empty-state {
             text-align: center;
@@ -1013,6 +949,19 @@
                 font-size: 0.75rem;
             }
         }
+
+        .theme-toggle { background:none; border:1.5px solid var(--border-color); border-radius:10px; padding:6px 10px; cursor:pointer; font-size:1.1rem; transition:all 0.3s; display:flex; align-items:center; }
+        .theme-toggle:hover { border-color:var(--primary); transform:scale(1.05); }
+        .header-actions { display:flex; align-items:center; gap:0.5rem; }
+        .btn-export { display:inline-flex; align-items:center; gap:0.4rem; padding:0.55rem 1.1rem; background:transparent; border:1.5px solid var(--success); color:var(--success); border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.25s; white-space:nowrap; font-family:'Outfit',sans-serif; }
+        .btn-export:hover { background:var(--success); color:white; }
+        .status-badge.overpaid { background:rgba(16,185,129,0.12); color:var(--success); }
+        .status-badge.fullypaid { background:rgba(16,185,129,0.12); color:var(--success); }
+        .alert-badge { display:inline-flex; align-items:center; gap:0.25rem; padding:0.2rem 0.55rem; border-radius:999px; font-size:0.7rem; font-weight:600; background:rgba(239,68,68,0.1); color:var(--danger); animation:pulse-alert 2s infinite; }
+        @keyframes pulse-alert { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+        .ptr-indicator { text-align:center; padding:0; color:var(--primary); font-size:0.85rem; font-weight:600; opacity:0; transition:all 0.3s; height:0; overflow:hidden; }
+        .ptr-indicator.visible { opacity:1; height:auto; padding:0.75rem; }
+        .lc-value.green { color: var(--success); }
     </style>
 </head>
 
@@ -1028,8 +977,13 @@
                     <p id="userEmailDisplay">Loading...</p>
                 </div>
             </div>
-            <button class="btn-logout" onclick="logout()">Sign Out</button>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
+                <button class="btn-logout" onclick="logout()">Sign Out</button>
+            </div>
         </div>
+
+        <div class="ptr-indicator" id="ptrIndicator">↻ Refreshing loans...</div>
 
         <!-- Stat Cards -->
         <div class="dashboard-header">
@@ -1064,13 +1018,14 @@
         <div class="glass-panel">
             <div
                 style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
-                <h2 style="font-size:1.2rem;font-weight:700;">Active Loans</h2>
+                <h2 style="font-size:1.2rem;font-weight:700;">Active Loans <span id="loanCount" style="font-size:0.85rem;color:var(--text-muted);font-weight:500;"></span></h2>
                 <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
-                    <!-- <select id="sortSelect" class="form-input" style="max-width:175px;padding:0.5rem 0.75rem;">
+                    <select id="sortSelect" class="form-input" style="max-width:175px;padding:0.5rem 0.75rem;">
                         <option value="date">📅 Sort by Date</option>
                         <option value="remaining">💰 Sort by Remaining</option>
                         <option value="name">🔤 Sort by Name</option>
-                    </select> -->
+                    </select>
+                    <button class="btn-export" onclick="exportCSV()">📥 Export</button>
                     <button class="btn-add" id="openAddModal">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -1144,20 +1099,7 @@
                             style="color:var(--text-muted);font-size:0.78rem;">(optional)</span></label>
                     <input type="text" id="f_assetName" class="form-input">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Asset Photo <span
-                            style="color:var(--text-muted);font-size:0.78rem;">(optional)</span></label>
-                    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-                        <button type="button" class="btn-camera-trigger" onclick="openCamera('f_assetPhoto')">
-                            📷 Capture
-                        </button>
-                        <label class="file-label" for="f_assetPhoto" style="flex:1;min-width:160px;">
-                            🖼 <span id="f_assetPhotoLabel">Upload image</span>
-                        </label>
-                    </div>
-                    <input type="file" id="f_assetPhoto" accept="image/*" style="display:none"
-                        onchange="document.getElementById('f_assetPhotoLabel').textContent=this.files[0]?this.files[0].name:'Upload image'">
-                </div>
+
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeAddModal()">Cancel</button>
                     <button type="submit" class="btn-save">Add Loan</button>
@@ -1232,19 +1174,7 @@
                     <label class="form-label">Asset / Collateral Name</label>
                     <input type="text" id="e_assetName" class="form-input">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Asset Photo</label>
-                    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-                        <button type="button" class="btn-camera-trigger" onclick="openCamera('e_assetPhoto')">📷
-                            Capture</button>
-                        <label class="file-label" for="e_assetPhoto" style="flex:1;min-width:160px;">
-                            🖼 <span id="e_assetPhotoLabel">Tap to change image</span>
-                        </label>
-                    </div>
-                    <input type="file" id="e_assetPhoto" accept="image/*" style="display:none"
-                        onchange="document.getElementById('e_assetPhotoLabel').textContent=this.files[0]?this.files[0].name:'Tap to change image'">
-                    <div id="e_assetPhotoPreview" style="margin-top:0.5rem;"></div>
-                </div>
+
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
                     <button type="submit" class="btn-save">Save Changes</button>
@@ -1276,10 +1206,7 @@
                 <button class="modal-close"
                     onclick="document.getElementById('assetPopup').classList.remove('active')">✕</button>
             </div>
-            <img id="assetPopupImg" class="asset-popup-img" src="" alt="Asset" style="display:none;">
-            <div id="assetPopupNoImg" style="text-align:center;padding:1.5rem 0;color:var(--text-muted);display:none;">
-                <p style="font-size:0.85rem;">No photo uploaded</p>
-            </div>
+
             <div class="asset-detail-row"><span>Borrower</span><span id="assetPopupBorrower"></span></div>
             <div class="asset-detail-row"><span>Asset Name</span><span id="assetPopupName"></span></div>
             <div class="asset-detail-row"><span>Principal</span><span id="assetPopupAmount"></span></div>
@@ -1293,27 +1220,10 @@
         </div>
     </div>
 
-    <!-- CAMERA MODAL -->
-    <div class="modal-overlay" id="cameraModal">
-        <div class="modal-box" style="padding:1.5rem;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-                <div class="modal-title" style="margin-bottom:0;">📷 Capture Photo</div>
-                <button class="camera-close-btn" onclick="closeCamera()">✕</button>
-            </div>
-            <div class="camera-container">
-                <video id="cameraView" autoplay playsinline></video>
-                <div class="camera-overlay-info">Position the asset in center</div>
-            </div>
-            <canvas id="cameraCanvas" style="display:none;"></canvas>
-            <div style="margin-top:1rem;">
-                <button class="btn-save" style="width:100%;padding:0.7rem;" onclick="takePhoto()">📸 Capture
-                    Now</button>
-            </div>
-        </div>
-    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
@@ -1341,8 +1251,7 @@
         let currentUser = null;
         let loans = [];
         let currentEditId = null;
-        let cameraTargetInput = null;
-        let cameraStream = null;
+
 
         /* ===== HELPERS ===== */
         const fmt = v => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v);
@@ -1365,17 +1274,34 @@
         function calcRemaining(loan) {
             const interest = calcInterest(loan.amount, loan.rate, loan.date);
             const paid = calcTotalPaid(loan.payments);
-            return Math.max(0, loan.amount + interest - paid);
+            return loan.amount + interest - paid; // negative = overpaid
         }
 
-        function toBase64(file) {
-            return new Promise((res, rej) => {
-                const r = new FileReader();
-                r.onload = () => res(r.result);
-                r.onerror = rej;
-                r.readAsDataURL(file);
-            });
+        function animateValue(el, end, duration = 800) {
+            const start = 0;
+            const range = end - start;
+            const startTime = performance.now();
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = fmt(Math.round(start + range * eased));
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
         }
+
+        /* ===== DARK MODE ===== */
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        window.toggleTheme = () => {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('themeToggle').textContent = isDark ? '🌙' : '☀️';
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        };
+        if (savedTheme === 'dark') document.getElementById('themeToggle').textContent = '☀️';
 
         /* ===== AUTH ===== */
         onAuthStateChanged(auth, user => {
@@ -1423,17 +1349,17 @@
                 totalPaid += paid;
                 totalOut += rem;
             });
-            document.getElementById('totalPrincipal').textContent = fmt(totalP);
-            document.getElementById('totalInterest').textContent = fmt(totalI);
-            document.getElementById('totalCollected').textContent = fmt(totalPaid);
-            document.getElementById('totalOutstanding').textContent = fmt(totalOut);
-            document.getElementById('totalValue').textContent = fmt(totalP + totalI);
+            animateValue(document.getElementById('totalPrincipal'), totalP);
+            animateValue(document.getElementById('totalInterest'), totalI);
+            animateValue(document.getElementById('totalCollected'), totalPaid);
+            animateValue(document.getElementById('totalOutstanding'), totalOut);
+            animateValue(document.getElementById('totalValue'), totalP + totalI);
         }
 
         /* ===== RENDER LOANS ===== */
         function renderLoans() {
             const search = document.getElementById('searchInput').value.toLowerCase();
-            // const sort = document.getElementById('sortSelect').value;
+            const sort = document.getElementById('sortSelect').value;
             const container = document.getElementById('loansList');
 
             let active = loans.filter(l => l.status === 'InProgress');
@@ -1443,10 +1369,24 @@
                 (l.mobile || '').toLowerCase().includes(search)
             );
 
+            // Sort
+            if (sort === 'name') active.sort((a, b) => a.name.localeCompare(b.name));
+            else if (sort === 'remaining') active.sort((a, b) => calcRemaining(b) - calcRemaining(a));
+            else active.sort((a, b) => new Date(b.date) - new Date(a.date));
 
+            // Loan count badge
+            document.getElementById('loanCount').textContent = `(${active.length})`;
 
             if (active.length === 0) {
-                container.innerHTML = `<div class="empty-state"><p>No active loans found.</p></div>`;
+                container.innerHTML = `<div class="empty-state">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;margin-bottom:0.75rem;">
+                        <rect x="2" y="3" width="20" height="18" rx="3"/>
+                        <line x1="8" y1="9" x2="16" y2="9"/>
+                        <line x1="8" y1="13" x2="13" y2="13"/>
+                    </svg>
+                    <p style="margin-bottom:1rem;">No active loans found</p>
+                    <button class="btn-add" onclick="document.getElementById('openAddModal').click()">+ Add your first loan</button>
+                </div>`;
                 return;
             }
 
@@ -1457,20 +1397,38 @@
             const interest = calcInterest(l.amount, l.rate, l.date);
             const paid = calcTotalPaid(l.payments);
             const total = l.amount + interest;
-            const remaining = Math.max(0, total - paid);
+            const remainingRaw = total - paid;
+            const remaining = Math.max(0, remainingRaw);
+            const isOverpaid = remainingRaw < 0;
+            const isFullyPaid = remainingRaw <= 0;
             const pct = total > 0 ? Math.min(100, (paid / total) * 100) : 0;
             const barClass = pct >= 75 ? '' : pct >= 40 ? 'mid' : 'high';
             const months = monthsBetween(l.date);
             const lastPay = l.payments.length ? l.payments[l.payments.length - 1] : null;
+
+            // Payment alert: 3+ months since last payment
+            const lastPayDate = l.payments.length ? l.payments[l.payments.length - 1].date : l.date;
+            const monthsSinceLastPay = monthsBetween(lastPayDate);
+            const alertBadge = (monthsSinceLastPay >= 3 && !isFullyPaid) ? `<span class="alert-badge">⚠️ No payment in ${monthsSinceLastPay}mo</span>` : '';
+
+            // Overpaid / fully paid status
+            const statusBadge = isOverpaid
+                ? `<span class="status-badge overpaid">🟢 Overpaid · ${months}mo</span>`
+                : isFullyPaid
+                    ? `<span class="status-badge fullypaid">✅ Fully Paid · ${months}mo</span>`
+                    : `<span class="status-badge inprogress">🔵 Active · ${months}mo</span>`;
 
             const assetSection = l.assetName ? `
         <span class="asset-chip" onclick="event.stopPropagation();showAsset('${l.id}')">
             📎 ${l.assetName}
         </span>` : '';
 
-            const photoSection = l.assetPhoto ? `
-        <img src="${l.assetPhoto}" class="asset-thumb" onclick="event.stopPropagation();showAsset('${l.id}')" alt="asset">
-    ` : '';
+            // Remaining display
+            const remainingDisplay = isOverpaid
+                ? `<span class="lc-value green">Overpaid: ${fmt(Math.abs(remainingRaw))}</span>`
+                : isFullyPaid
+                    ? `<span class="lc-value green">✅ Fully Paid</span>`
+                    : `<span class="lc-value red">${fmt(remaining)}</span>`;
 
             return `
     <div class="loan-card" id="card_${l.id}">
@@ -1479,7 +1437,8 @@
           <span class="lc-label">Borrower</span>
           <span class="lc-value" style="font-size:1.05rem;">${l.name}</span>
           ${l.mobile ? `<span style="font-size:0.75rem;color:var(--text-muted);">📞 ${l.mobile}</span>` : ''}
-          <span class="status-badge inprogress">🔵 Active · ${months}mo</span>
+          ${statusBadge}
+          ${alertBadge}
           ${assetSection}
         </div>
         <div class="loan-col">
@@ -1494,11 +1453,10 @@
 </div>
         <div class="loan-col">
   <span class="lc-label">Remaining</span>
-  <span class="lc-value red">${fmt(remaining)}</span>
+  ${remainingDisplay}
   ${lastPay ? `<span style="font-size:0.72rem;color:var(--success);">Last: ${fmt(lastPay.amount)}</span>` : ''}
 </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;">
-          ${photoSection}
           <span class="expand-arrow">▼</span>
         </div>
       </div>
@@ -1511,7 +1469,7 @@
 <div class="fin-item"><span class="fin-label">Interest Due</span><span class="fin-value orange">${fmt(Math.max(0, interest - Math.min(paid, interest)))}</span></div>
 <div class="fin-item"><span class="fin-label">Total Due</span><span class="fin-value red">${fmt(total)}</span></div>
 <div class="fin-item"><span class="fin-label">Total Paid</span><span class="fin-value green">${fmt(paid)}</span></div>
-<div class="fin-item"><span class="fin-label">Remaining</span><span class="fin-value red">${fmt(remaining)}</span></div>
+<div class="fin-item"><span class="fin-label">Remaining</span><span class="fin-value ${isOverpaid ? 'green' : 'red'}">${isOverpaid ? 'Overpaid: ' + fmt(Math.abs(remainingRaw)) : isFullyPaid ? '✅ Fully Paid' : fmt(remaining)}</span></div>
 <div class="fin-item"><span class="fin-label">Loan Date</span><span class="fin-value" style="font-size:0.82rem;font-weight:600;">${l.date}</span></div>
           </div>
           <div class="progress-block">
@@ -1594,17 +1552,13 @@
         /* ===== ADD MODAL ===== */
         document.getElementById('openAddModal').addEventListener('click', () => {
             document.getElementById('loanForm').reset();
-            document.getElementById('f_assetPhotoLabel').textContent = 'Upload image';
             document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
-            if (window._capturedPhotos) delete window._capturedPhotos['f_assetPhoto'];
             document.getElementById('addModal').classList.add('active');
         });
 
         window.closeAddModal = () => {
             document.getElementById('addModal').classList.remove('active');
             document.getElementById('loanForm').reset();
-            document.getElementById('f_assetPhotoLabel').textContent = 'Upload image';
-            if (window._capturedPhotos) delete window._capturedPhotos['f_assetPhoto'];
         };
 
         document.getElementById('loanForm').addEventListener('submit', async (e) => {
@@ -1620,14 +1574,6 @@
             const rateVal = parseFloat(document.getElementById('f_rate').value);
             const statusVal = document.getElementById('f_status').value;
             const assetNameVal = document.getElementById('f_assetName').value.trim();
-            const photoFile = document.getElementById('f_assetPhoto').files[0];
-
-            let assetPhoto = null;
-            if (photoFile) assetPhoto = await toBase64(photoFile);
-            // Use camera-captured photo if no file selected
-            if (!assetPhoto && window._capturedPhotos && window._capturedPhotos['f_assetPhoto']) {
-                assetPhoto = window._capturedPhotos['f_assetPhoto'];
-            }
 
             const saveBtn = e.target.querySelector('.btn-save');
             saveBtn.disabled = true;
@@ -1643,7 +1589,6 @@
                     rate: rateVal,
                     status: statusVal,
                     assetName: assetNameVal,
-                    assetPhoto: assetPhoto,
                     payments: [],
                     createdAt: new Date().toISOString()
                 });
@@ -1677,17 +1622,18 @@
             // Fill balance summary
             const interest = calcInterest(l.amount, l.rate, l.date);
             const paid = calcTotalPaid(l.payments);
-            const remaining = Math.max(0, l.amount + interest - paid);
+            const remainingRaw = l.amount + interest - paid;
+            const remaining = Math.max(0, remainingRaw);
+            const isOverpaid = remainingRaw < 0;
+            const isFullyPaid = remainingRaw <= 0;
             document.getElementById('mbPrincipal').textContent = fmt(l.amount);
             document.getElementById('mbInterest').textContent = fmt(interest);
             document.getElementById('mbPaid').textContent = fmt(paid);
-
-            // document.getElementById('mbRemaining').textContent = fmt(remaining);
-
-
-
+            const mbRemEl = document.getElementById('mbRemaining');
+            if (isOverpaid) { mbRemEl.textContent = 'Overpaid: ' + fmt(Math.abs(remainingRaw)); mbRemEl.style.color = 'var(--success)'; }
+            else if (isFullyPaid) { mbRemEl.textContent = '✅ Fully Paid'; mbRemEl.style.color = 'var(--success)'; }
+            else { mbRemEl.textContent = fmt(remaining); mbRemEl.style.color = 'var(--danger)'; }
             document.getElementById('mbInterestDue').textContent = fmt(Math.max(0, interest - Math.min(paid, interest)));
-
 
             // Fill form
             document.getElementById('editLoanId').value = id;
@@ -1698,13 +1644,6 @@
             document.getElementById('e_rate').value = l.rate;
             document.getElementById('e_status').value = l.status || 'InProgress';
             document.getElementById('e_assetName').value = l.assetName || '';
-            document.getElementById('e_assetPhotoLabel').textContent = l.assetPhoto ? 'Photo on file' : 'Tap to change image';
-
-            // Preview existing photo
-            const preview = document.getElementById('e_assetPhotoPreview');
-            preview.innerHTML = l.assetPhoto
-                ? `<img src="${l.assetPhoto}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border-color);">`
-                : '';
 
             // Payment history
             document.getElementById('payDate').value = new Date().toISOString().split('T')[0];
@@ -1723,25 +1662,43 @@
             e.preventDefault();
             if (!currentEditId) return;
 
-            const photoFile = document.getElementById('e_assetPhoto').files[0];
+            const newStatus = document.getElementById('e_status').value;
             const currentLoan = loans.find(x => x.id === currentEditId);
-            let assetPhoto = currentLoan?.assetPhoto || null;
-            if (photoFile) assetPhoto = await toBase64(photoFile);
 
-            await updateDoc(doc(db, 'loans', currentEditId), {
-                name: document.getElementById('e_name').value.trim(),
-                mobile: document.getElementById('e_mobile').value.trim(),
-                date: document.getElementById('e_date').value,
-                amount: parseFloat(document.getElementById('e_amount').value),
-                rate: parseFloat(document.getElementById('e_rate').value),
-                status: document.getElementById('e_status').value,
-                assetName: document.getElementById('e_assetName').value.trim(),
-                assetPhoto: assetPhoto
-            });
+            // Status change confirmation
+            if (newStatus === 'Completed' && currentLoan && currentLoan.status === 'InProgress') {
+                const rem = calcRemaining(currentLoan);
+                if (rem > 0) {
+                    const confirm = await Swal.fire({
+                        title: 'Outstanding balance: ' + fmt(rem),
+                        text: 'This loan still has a remaining balance. Are you sure you want to mark it as Completed?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, complete it',
+                        cancelButtonText: 'Cancel'
+                    });
+                    if (!confirm.isConfirmed) return;
+                }
+            }
 
-            closeEditModal();
-            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Loan updated!', timer: 2000, showConfirmButton: false });
-            loadLoans();
+            try {
+                await updateDoc(doc(db, 'loans', currentEditId), {
+                    name: document.getElementById('e_name').value.trim(),
+                    mobile: document.getElementById('e_mobile').value.trim(),
+                    date: document.getElementById('e_date').value,
+                    amount: parseFloat(document.getElementById('e_amount').value),
+                    rate: parseFloat(document.getElementById('e_rate').value),
+                    status: newStatus,
+                    assetName: document.getElementById('e_assetName').value.trim()
+                });
+
+                closeEditModal();
+                Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Loan updated!', timer: 2000, showConfirmButton: false });
+                loadLoans();
+            } catch (err) {
+                console.error('Edit loan error:', err);
+                Swal.fire({ icon: 'error', title: 'Error', text: err.message || 'Failed to update loan.' });
+            }
         });
 
         /* ===== PAYMENTS ===== */
@@ -1764,10 +1721,19 @@
             loans = loans.map(l => l.id === currentEditId ? newLoan : l);
             const interest = calcInterest(newLoan.amount, newLoan.rate, newLoan.date);
             const paid = calcTotalPaid(payments);
-            const remaining = Math.max(0, newLoan.amount + interest - paid);
+            const remainingRaw = newLoan.amount + interest - paid;
+            const remaining = Math.max(0, remainingRaw);
             document.getElementById('mbPaid').textContent = fmt(paid);
-            document.getElementById('mbRemaining').textContent = fmt(remaining);
+            const mbRemEl = document.getElementById('mbRemaining');
+            if (remainingRaw < 0) { mbRemEl.textContent = 'Overpaid: ' + fmt(Math.abs(remainingRaw)); mbRemEl.style.color = 'var(--success)'; }
+            else if (remainingRaw <= 0) { mbRemEl.textContent = '✅ Fully Paid'; mbRemEl.style.color = 'var(--success)'; }
+            else { mbRemEl.textContent = fmt(remaining); mbRemEl.style.color = 'var(--danger)'; }
             document.getElementById('mbInterestDue').textContent = fmt(Math.max(0, interest - Math.min(paid, interest)));
+
+            // Auto-suggest completing if fully paid
+            if (remainingRaw <= 0 && newLoan.status === 'InProgress') {
+                Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'Loan fully paid! Consider marking as Completed.', timer: 3000, showConfirmButton: false });
+            }
 
             renderPayHistory(newLoan);
             renderAll();
@@ -1795,7 +1761,11 @@
             const interest = calcInterest(updatedLoan.amount, updatedLoan.rate, updatedLoan.date);
             const paid = calcTotalPaid(payments);
             document.getElementById('mbPaid').textContent = fmt(paid);
-            document.getElementById('mbRemaining').textContent = fmt(Math.max(0, updatedLoan.amount + interest - paid));
+            const remRaw = updatedLoan.amount + interest - paid;
+            const mbRemEl = document.getElementById('mbRemaining');
+            if (remRaw < 0) { mbRemEl.textContent = 'Overpaid: ' + fmt(Math.abs(remRaw)); mbRemEl.style.color = 'var(--success)'; }
+            else if (remRaw <= 0) { mbRemEl.textContent = '✅ Fully Paid'; mbRemEl.style.color = 'var(--success)'; }
+            else { mbRemEl.textContent = fmt(remRaw); mbRemEl.style.color = 'var(--danger)'; }
             document.getElementById('mbInterestDue').textContent = fmt(Math.max(0, interest - Math.min(paid, interest)));
 
             renderPayHistory(updatedLoan);
@@ -1824,56 +1794,64 @@
         window.showAsset = (id) => {
             const l = loans.find(x => x.id === id);
             if (!l) return;
-            const img = document.getElementById('assetPopupImg');
-            const noImg = document.getElementById('assetPopupNoImg');
-            if (l.assetPhoto) { img.src = l.assetPhoto; img.style.display = 'block'; noImg.style.display = 'none'; }
-            else { img.style.display = 'none'; noImg.style.display = 'block'; }
             document.getElementById('assetPopupBorrower').textContent = l.name;
             document.getElementById('assetPopupName').textContent = l.assetName || '—';
             document.getElementById('assetPopupAmount').textContent = fmt(l.amount);
             document.getElementById('assetPopupDate').textContent = l.date;
-            document.getElementById('assetPopupRemaining').textContent = fmt(calcRemaining(l));
+            const rem = calcRemaining(l);
+            const remEl = document.getElementById('assetPopupRemaining');
+            remEl.textContent = rem < 0 ? 'Overpaid: ' + fmt(Math.abs(rem)) : rem === 0 ? '✅ Fully Paid' : fmt(rem);
+            remEl.style.color = rem <= 0 ? 'var(--success)' : 'var(--danger)';
             document.getElementById('assetPopup').classList.add('active');
         };
 
-        /* ===== CAMERA ===== */
-        window.openCamera = async (inputId) => {
-            cameraTargetInput = inputId;
-            document.getElementById('cameraModal').classList.add('active');
-            try {
-                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                document.getElementById('cameraView').srcObject = cameraStream;
-            } catch { Swal.fire({ toast: true, icon: 'error', title: 'Camera not accessible', timer: 2500, showConfirmButton: false, position: 'top-end' }); closeCamera(); }
-        };
-
-        window.closeCamera = () => {
-            if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
-            document.getElementById('cameraModal').classList.remove('active');
-        };
-
-        window.takePhoto = () => {
-            const video = document.getElementById('cameraView');
-            const canvas = document.getElementById('cameraCanvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-
-            // Set as file input preview via data URL stored separately
-            const labelId = cameraTargetInput === 'f_assetPhoto' ? 'f_assetPhotoLabel' : 'e_assetPhotoLabel';
-            document.getElementById(labelId).textContent = '📷 Photo captured';
-
-            // Store in a global temp object
-            window._capturedPhotos = window._capturedPhotos || {};
-            window._capturedPhotos[cameraTargetInput] = dataUrl;
-
-            closeCamera();
-            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Photo captured!', timer: 1500, showConfirmButton: false });
+        /* ===== EXPORT CSV ===== */
+        window.exportCSV = () => {
+            const active = loans.filter(l => l.status === 'InProgress');
+            if (active.length === 0) { Swal.fire({ toast: true, icon: 'warning', title: 'No loans to export', timer: 2000, showConfirmButton: false, position: 'top-end' }); return; }
+            const headers = ['Name','Mobile','Date','Principal','Rate','Interest','Paid','Remaining','Status'];
+            const rows = active.map(l => {
+                const interest = calcInterest(l.amount, l.rate, l.date);
+                const paid = calcTotalPaid(l.payments);
+                const rem = l.amount + interest - paid;
+                return [l.name, l.mobile||'', l.date, l.amount, l.rate, Math.round(interest), Math.round(paid), Math.round(rem), rem <= 0 ? 'Fully Paid' : 'Active'];
+            });
+            let csv = headers.join(',') + '\n';
+            rows.forEach(r => { csv += r.map(v => `"${v}"`).join(',') + '\n'; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `loans_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'CSV exported!', timer: 2000, showConfirmButton: false });
         };
 
         /* ===== SEARCH & SORT ===== */
         document.getElementById('searchInput').addEventListener('input', renderLoans);
-        // document.getElementById('sortSelect').addEventListener('change', renderLoans);
+        document.getElementById('sortSelect').addEventListener('change', renderLoans);
+
+        /* ===== PULL TO REFRESH ===== */
+        let touchStartY = 0;
+        let isPulling = false;
+        document.addEventListener('touchstart', (e) => {
+            if (window.scrollY === 0) touchStartY = e.touches[0].clientY;
+        });
+        document.addEventListener('touchmove', (e) => {
+            if (touchStartY && e.touches[0].clientY - touchStartY > 80 && window.scrollY === 0) {
+                document.getElementById('ptrIndicator').classList.add('visible');
+                isPulling = true;
+            }
+        });
+        document.addEventListener('touchend', () => {
+            if (isPulling) {
+                loadLoans();
+                setTimeout(() => document.getElementById('ptrIndicator').classList.remove('visible'), 1000);
+                isPulling = false;
+            }
+            touchStartY = 0;
+        });
 
         /* ===== CLOSE ON OVERLAY CLICK ===== */
         /* Add modal: clicking outside does NOT close it (preserves form data) */
